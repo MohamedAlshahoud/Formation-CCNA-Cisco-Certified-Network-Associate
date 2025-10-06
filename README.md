@@ -14,4 +14,6 @@ L’objectif de cette formation est d’acquérir les compétences nécessaires 
 1. **Bases des réseaux**
 2. **Routing et Switching**
 3. **Scaling Networks**
-4. **Connecting Networks**     
+4. **Connecting Networks**
+
+---
