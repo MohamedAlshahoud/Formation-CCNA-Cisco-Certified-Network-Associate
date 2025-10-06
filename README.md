@@ -12,4 +12,5 @@ L’objectif de cette formation est d’acquérir les compétences nécessaires 
 
 ## 🧩 Unités d’enseignement
 1. **Bases des réseaux**
-2. **Routing et Switching**   
+2. **Routing et Switching**
+3. **Scaling Networks**    
