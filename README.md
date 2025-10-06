@@ -9,3 +9,5 @@ Cette repository documente ma progression dans la **formation CCNA** dispensée 
 L’objectif de cette formation est d’acquérir les compétences nécessaires pour **concevoir, installer, configurer et maintenir** des réseaux informatiques.  
 
 ---
+
+## 🧩 Unités d’enseignement
