@@ -17,7 +17,8 @@ L’objectif de cette formation est d’acquérir les compétences nécessaires 
  - Câblage, topologies et périphériques réseaux     
 2. 
 3. **Routing et Switching**
- Configuration des routeurs et commutateurs Cisco  
+ -Configuration des routeurs et commutateurs Cisco
+ - VLAN, STP, EtherChannel  
 4. **Scaling Networks**
 5. **Connecting Networks**
 
