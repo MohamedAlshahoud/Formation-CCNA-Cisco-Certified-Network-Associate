@@ -11,16 +11,18 @@ L’objectif de cette formation est d’acquérir les compétences nécessaires 
 ---
 
 ## 🧩 Unités d’enseignement
+
 1. **Bases des réseaux**
  - Introduction aux modèles OSI et TCP/IP
  - Adressage IPv4 et IPv6
  - Câblage, topologies et périphériques réseaux     
-2. 
-3. **Routing et Switching**
+ 
+2. **Routing et Switching**
  -Configuration des routeurs et commutateurs Cisco
  - VLAN, STP, EtherChannel
  - Routage statique et dynamique (RIP, OSPF, EIGRP)    
-4. **Scaling Networks**
-5. **Connecting Networks**
+
+3. **Scaling Networks**
+4. **Connecting Networks**
 
 ---
