@@ -18,7 +18,8 @@ L’objectif de cette formation est d’acquérir les compétences nécessaires 
 2. 
 3. **Routing et Switching**
  -Configuration des routeurs et commutateurs Cisco
- - VLAN, STP, EtherChannel  
+ - VLAN, STP, EtherChannel
+ - Routage statique et dynamique (RIP, OSPF, EIGRP)    
 4. **Scaling Networks**
 5. **Connecting Networks**
 
