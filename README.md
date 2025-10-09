@@ -17,10 +17,7 @@ L’objectif de cette formation est d’acquérir les compétences nécessaires 
  - Adressage IPv4 et IPv6
  - Câblage, topologies et périphériques réseaux     
  
-2. **Routing et Switching**
- -Configuration des routeurs et commutateurs Cisco
- - VLAN, STP, EtherChannel
- - Routage statique et dynamique (RIP, OSPF, EIGRP)    
+2. **Routing et Switching**   
 
 3. **Scaling Networks**
 4. **Connecting Networks**
