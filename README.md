@@ -26,9 +26,9 @@ L’objectif de cette formation est d’acquérir les compétences nécessaires 
  - Hiérarchisation et évolutivité des réseaux
  - Sécurité et QoS
  - Optimisation des performances réseau    
-5. **Connecting Networks**
+4. **Connecting Networks**
  - Interconnexion WAN (PPP, Frame Relay, MPLS)
  - NAT, DHCP, DNS
- - 
+ - Accès distant et VPN  
 
 ---
