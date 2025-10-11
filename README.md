@@ -28,6 +28,7 @@ L’objectif de cette formation est d’acquérir les compétences nécessaires 
  - Optimisation des performances réseau    
 5. **Connecting Networks**
  - Interconnexion WAN (PPP, Frame Relay, MPLS)
+ - NAT, DHCP, DNS
  - 
 
 ---
