@@ -24,6 +24,7 @@ L’objectif de cette formation est d’acquérir les compétences nécessaires 
 
 3. **Scaling Networks**
  - Hiérarchisation et évolutivité des réseaux
+ - Sécurité et QoS
  -   
 5. **Connecting Networks**
 
