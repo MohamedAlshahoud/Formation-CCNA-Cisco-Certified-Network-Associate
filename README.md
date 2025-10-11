@@ -23,6 +23,8 @@ L’objectif de cette formation est d’acquérir les compétences nécessaires 
  - Routage statique et dynamique (RIP, OSPF, EIGRP)  
 
 3. **Scaling Networks**
-4. **Connecting Networks**
+ - Hiérarchisation et évolutivité des réseaux
+ -   
+5. **Connecting Networks**
 
 ---
