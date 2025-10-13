@@ -36,8 +36,8 @@ L’objectif de cette formation est d’acquérir les compétences nécessaires 
 Le **Cisco Networking Academy** est un programme mondial lancé par Cisco en 1997, visant à former des professionnels aux technologies réseau et Internet. 
 
 Ce programme à but non lucratif :
-- favorise le développement des technologies avancées
-- aide à l’insertion et à la reconversion professionnelle
-- propose un enseignement pratique basé sur le **e-learning** et des **labs encadrés localement**.
+- Favorise le développement des technologies avancées
+- Aide à l’insertion et à la reconversion professionnelle
+- Propose un enseignement pratique basé sur le **e-learning** et des **labs encadrés localement**.
 
 ---
