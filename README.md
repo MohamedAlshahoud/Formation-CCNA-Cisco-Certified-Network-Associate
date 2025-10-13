@@ -37,3 +37,4 @@ Le **Cisco Networking Academy** est un programme mondial lancé par Cisco en 199
 
 Ce programme à but non lucratif :
 - favorise le développement des technologies avancées
+- aide à l’insertion et à la reconversion professionnelle
