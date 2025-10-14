@@ -1,0 +1,60 @@
+Description : Intel(R) Wi-Fi 6 AX201 160MHz
+
+Adresse MAC : C4-BD-E5-9C-54-A0
+
+Adresse IPv4 : 192.168.0.2
+
+Masque de sous-réseau : 255.255.255.0
+
+Passerelle par défaut : 192.168.0.1
+
+
+
+Nom d'hôte :
+LenovoAishahoud
+
+
+!------------------Première capture wireshark-----------------
+
+Adresse IP source : 192.168.0.2
+
+Adresse IP destination : 192.168.0.1
+
+Adresse MAC source : c4:bd:e5:9c:54:a0
+
+Adresse MAC destination : ad:97:33:7f:73:f0
+
+
+!----Capture wireshark vers des sites distants (google)---------
+
+Adresse IP : 108.177.15.99
+
+Adresse MAC de destination : ad:97:33:7f:73:f0
+
+
+
+!----Capture wireshark vers des sites distants (cisco)---------
+
+Adresse IP : 23.12.148.114
+
+Adresse MAC de destination : ad:97:33:7f:73:f0
+
+
+--------------------------------------------------------------------
+
+
+Qu'y a-t-il d'important à retenir de ces informations ?
+
+L'adresse MAC est identique
+
+En quoi ces informations diffèrent-elles des informations de requêtes ping locales que vous avez reçues
+dans la partie 1?
+
+Pas de différance , pc envoie les paquets vers la même adresse MAC 
+
+
+Question de réflexion
+Pourquoi Wireshark affiche-t-il l'adresse MAC réelle des hôtes locaux, mais pas l'adresse MAC réelle des
+hôtes distants ?
+
+Parce que la communication réseau fonctionne par "sauts". Le PC ne connaît que les appareils de son réseau local. Pour atteindre des sites distants, il envoie TOUJOURS les paquets à la passerelle par défaut (routeur). Wireshark capture au niveau de l'interface réseau, donc il ne voit que le "prochain saut". Les serveurs distants sont dans d'autres réseaux, invisibles directement au niveau MAC depuis mon PC.
