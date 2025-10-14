@@ -1,0 +1,70 @@
+Description : Intel(R) Wi-Fi 6 AX201 160MHz
+
+Adresse MAC : C4-BD-E5-9C-54-A0
+
+Adresse IPv4 : 192.168.0.2
+
+Masque de sous-réseau : 255.255.255.0
+
+MAC passerelle :  ad:97:33:7f:73:f0
+
+
+
+----------------------------------------------------------------
+Examiner les champs d'en-tête dans une trame Ethernet I :
+
+Structure d'une trame Ethernet II :
+
+[Préambule 8o] [MAC Destination 6o] [MAC Source 6o] [Type 2o] [Données 46-1500o] [FCS 4o]
+
+Quel élément est important en ce qui concerne le contenu du champ d'adresse de destination ?
+
+FF:FF:FF:FF:FF:FF (broadcast)
+
+Pourquoi l'ordinateur envoie-t-il une diffusion ARP avant d'envoyer la première requête ping ?
+
+
+
+
+Saisissez vos réponses ici
+Quelle est l'adresse MAC de la source dans la première trame ?
+Saisissez vos réponses ici
+Quel est l'ID du vendeur (OUI) du NIC source dans la réponse de l'ARP ?
+Saisissez vos réponses ici
+À quelle partie de l'adresse MAC correspond l'identifiant OUI ?
+Saisissez vos réponses ici
+Quel est le numéro de série de la carte réseau de la source ?
+
+-------------------------------------------------------------------
+
+Caractéristique	   Local (192.168.0.1)	Distant (23.55.97.5)
+
+MAC Source	c4:bd:e5:9c:54:a0	c4:bd:e5:9c:54:a0
+
+MAC Destination	ad:97:33:7f:73:f0	ad:97:33:7f:73:f0
+
+IP Source	192.168.0.2	192.168.0.2
+
+IP Destination	192.168.0.1	23.55.97.5
+
+------------------------------------------------------------------
+
+Comparez ces adresses à celles que vous avez reçues à l'étape 6. La seule adresse qui a changé est
+l'adresse IP de destination. 
+
+Pourquoi l'adresse IP de destination a-t-elle changé, alors que l'adresse MAC de destination est restée la même ?
+
+L'adresse MAC de destination est restée la même (ad:97:33:7f:73:f0) parce que mon PC envoie TOUJOURS les paquets vers le routeur (passerelle par défaut) pour tout trafic sortant. Le routeur se charge ensuite d'acheminer les paquets vers leur destination finale sur Internet.
+
+
+---------------------------------------------------------------
+
+Question de réflexion
+
+Wireshark n'affiche pas le champ de préambule d'un en-tête de trame. Que contient le champ de
+préambule ?
+
+7 premiers octets : 10101010 10101010 10101010 10101010 10101010 10101010 10101010
+
+8ème octet (SFD - Start Frame Delimiter) : 10101011
+
