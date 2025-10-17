@@ -48,3 +48,4 @@ Ce programme à but non lucratif :
 | 🟢 **CCENT** |
 | 🔵 **CCNA** |
 | 🟣 **CCNP** |
+| 🔴 **CCIE** |
