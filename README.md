@@ -45,3 +45,4 @@ Ce programme à but non lucratif :
 ## 🧠 Certifications Cisco
 | Niveau | Nom complet | Description |
 |--------|--------------|-------------|
+| 🟢 **CCENT** |
