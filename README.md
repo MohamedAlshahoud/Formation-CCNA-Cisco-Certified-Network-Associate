@@ -41,3 +41,5 @@ Ce programme à but non lucratif :
 - Propose un enseignement pratique basé sur le **e-learning** et des **labs encadrés localement**.
 
 ---
+
+## 🧠 Certifications Cisco
