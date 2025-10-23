@@ -1,0 +1,32 @@
+!--------------------------------------------
+! configuration de base
+!--------------------------------------------
+host S1
+no ip domain-lookup
+banner motd #
+Bonjour
+#
+enable secret class
+service password-encryption
+
+line con 0
+    exec-timeout 0
+    logging synchronous
+    passw cisco
+    login
+exit
+
+line vty 0 15
+    exec-timeout 0
+    passw cisco
+    login
+exit
+!--------------------------------------------
+! configuration interface de gestion
+!--------------------------------------------
+int vlan 1
+    ip add 192.168.1.2/24 255.255.255.0
+    no shut
+exit
+
+ip default-gateway 192.168.1.1
