@@ -46,6 +46,6 @@ Ce programme à but non lucratif :
 | Niveau | Nom complet | Description |
 |--------|--------------|-------------|
 | 🟢 **CCENT** |Cisco Certified Entry Network Technician | Premiers concepts réseau, adapté aux petites structures |
-| 🔵 **CCNA** |
+| 🔵 **CCNA** |Cisco Certified Network Associate | Connaissances fondamentales en réseaux IP et infrastructure |
 | 🟣 **CCNP** |
 | 🔴 **CCIE** |
