@@ -45,7 +45,7 @@ Ce programme à but non lucratif :
 ## 🧠 Certifications Cisco
 | Niveau | Nom complet | Description |
 |--------|--------------|-------------|
-| 🟢 **CCENT** |
+| 🟢 **CCENT** |Cisco Certified Entry Network Technician | Premiers concepts réseau, adapté aux petites structures |
 | 🔵 **CCNA** |
 | 🟣 **CCNP** |
 | 🔴 **CCIE** |
