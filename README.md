@@ -15,7 +15,7 @@ Cette **repository** documente ma progression dans la **formation CCNA** dispens
 1. **Bases des réseaux**
  - Introduction aux modèles **OSI et TCP/IP**
  - Adressage **IPv4 et IPv6**
- - **Câblage**, topologies et périphériques réseaux     
+ - **Câblage**, **topologies** et périphériques réseaux     
  
 2. **Routing et Switching**   
  - Configuration des routeurs et commutateurs Cisco  
