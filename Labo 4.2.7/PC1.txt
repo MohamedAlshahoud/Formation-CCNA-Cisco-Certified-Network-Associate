@@ -1,0 +1,30 @@
+Cisco Packet Tracer PC Command Line 1.0
+C:\>ping 172.17.30.1
+
+Pinging 172.17.30.1 with 32 bytes of data:
+
+Reply from 172.17.30.1: bytes=32 time<1ms TTL=255
+Reply from 172.17.30.1: bytes=32 time<1ms TTL=255
+Reply from 172.17.30.1: bytes=32 time=1ms TTL=255
+Reply from 172.17.30.1: bytes=32 time=1ms TTL=255
+
+Ping statistics for 172.17.30.1:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 0ms, Maximum = 1ms, Average = 0ms
+
+C:\>ping 172.17.10.10
+
+Pinging 172.17.10.10 with 32 bytes of data:
+
+Reply from 172.17.10.10: bytes=32 time<1ms TTL=127
+Reply from 172.17.10.10: bytes=32 time=1ms TTL=127
+Reply from 172.17.10.10: bytes=32 time<1ms TTL=127
+Reply from 172.17.10.10: bytes=32 time=10ms TTL=127
+
+Ping statistics for 172.17.10.10:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 0ms, Maximum = 10ms, Average = 2ms
+
+C:\>
