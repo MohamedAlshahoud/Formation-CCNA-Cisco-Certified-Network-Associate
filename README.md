@@ -19,7 +19,7 @@ Cette **repository** documente ma progression dans la **formation CCNA** dispens
  
 2. **Routing et Switching**   
  - Configuration des **routeurs** et **commutateurs Cisco**  
- - **VLAN**, STP, EtherChannel  
+ - **VLAN**, **STP**, EtherChannel  
  - Routage statique et dynamique (RIP, OSPF, EIGRP)  
 
 3. **Scaling Networks**
