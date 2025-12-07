@@ -18,7 +18,7 @@ Cette **repository** documente ma progression dans la **formation CCNA** dispens
  - **Câblage**, **topologies** et **périphériques réseaux**     
  
 2. **Routing et Switching**   
- - Configuration des routeurs et commutateurs Cisco  
+ - Configuration des **routeurs** et commutateurs Cisco  
  - VLAN, STP, EtherChannel  
  - Routage statique et dynamique (RIP, OSPF, EIGRP)  
 
