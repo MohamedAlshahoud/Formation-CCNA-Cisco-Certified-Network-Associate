@@ -25,7 +25,7 @@ Cette **repository** documente ma progression dans la **formation CCNA** dispens
 3. **Scaling Networks**
  - **Hiérarchisation** et **évolutivité des réseaux**
  - **Sécurité** et **QoS**
- - Optimisation des performances réseau    
+ - **Optimisation des performances réseau**    
 4. **Connecting Networks**
  - Interconnexion WAN (PPP, Frame Relay, MPLS)
  - NAT, DHCP, DNS
