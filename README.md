@@ -28,7 +28,7 @@ Cette **repository** documente ma progression dans la **formation CCNA** dispens
  - **Optimisation des performances réseau**    
 4. **Connecting Networks**
  - Interconnexion **WAN** (PPP, Frame Relay, MPLS)
- - **NAT**, **DHCP**, DNS
+ - **NAT**, **DHCP**, **DNS**
  - Accès distant et VPN  
 
 ---
