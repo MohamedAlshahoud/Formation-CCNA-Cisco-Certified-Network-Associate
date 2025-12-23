@@ -29,7 +29,7 @@ Cette **repository** documente ma progression dans la **formation CCNA** dispens
 4. **Connecting Networks**
  - Interconnexion **WAN** (PPP, Frame Relay, MPLS)
  - **NAT**, **DHCP**, **DNS**
- - Accès distant et VPN  
+ - **Accès distant et VPN**  
 
 ---
 ## 🌍 Le Programme Cisco Networking Academy
