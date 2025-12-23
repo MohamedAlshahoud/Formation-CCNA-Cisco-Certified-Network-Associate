@@ -33,7 +33,7 @@ Cette **repository** documente ma progression dans la **formation CCNA** dispens
 
 ---
 ## 🌍 Le Programme Cisco Networking Academy
-Le **Cisco Networking Academy** est un **programme mondial** lancé par **Cisco** en 1997, visant à former **des professionnels** aux technologies réseau et Internet. 
+Le **Cisco Networking Academy** est un **programme mondial** lancé par **Cisco** en 1997, visant à former **des professionnels** aux technologies **réseau et Internet**. 
 
 Ce programme à but non lucratif :
 - Favorise le développement des technologies avancées
