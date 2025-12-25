@@ -38,7 +38,7 @@ Le **Cisco Networking Academy** est un **programme mondial** lancé par **Cisco*
 Ce **programme** à but non lucratif :
 - Favorise le **développement des technologies avancées**
 - Aide à **l’insertion** et à **la reconversion professionnelle**
-- Propose un enseignement pratique basé sur le **e-learning** et des **labs encadrés localement**.
+- Propose **un enseignement pratique** basé sur le **e-learning** et des **labs encadrés localement**.
 
 ---
 
