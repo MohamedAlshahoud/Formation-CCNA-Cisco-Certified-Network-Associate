@@ -13,7 +13,7 @@ Cette **repository** documente ma progression dans la **formation CCNA** dispens
 ## 🧩 Unités d’enseignement
 
 1. **Bases des réseaux**
- - Introduction aux modèles **OSI et TCP/IP**
+ - **Introduction** aux modèles **OSI et TCP/IP**
  - Adressage **IPv4 et IPv6**
  - **Câblage**, **topologies** et **périphériques réseaux**     
  
