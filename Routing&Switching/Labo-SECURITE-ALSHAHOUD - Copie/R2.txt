@@ -1,0 +1,104 @@
+!---------------------------------------------
+! Configuration de base
+!---------------------------------------------
+
+en
+conf t
+no ip domain-lookup
+hostname R2
+ip domain-name labo-securite.com
+enable secret class
+line console 0
+ password cisco
+ login
+exit
+username admin secret admin123
+line vty 0 15
+  login local
+  transport input ssh
+exit
+service password-encryption
+banner motd "Acces reserve aux administrateurs !"
+
+
+!---------------------------------------------
+! Configuration du "Router-on-a-Stick" sur Gig0/0 et de la redondance HSRP.
+!---------------------------------------------
+
+interface g0/0
+ no shutdown
+exit
+
+interface g0/0.10
+ encapsulation dot1Q 10
+ ip address 172.16.10.3 255.255.255.0
+ standby 10 ip 172.16.10.1
+
+interface g0/0.20
+ encapsulation dot1Q 20
+ ip address 172.16.20.3 255.255.255.0
+ standby 20 ip 172.16.20.1
+ standby 20 priority 110
+ standby 20 preempt
+
+interface g0/0.30
+ encapsulation dot1Q 30
+ ip address 172.16.30.3 255.255.255.0
+ standby 30 ip 172.16.30.1
+
+interface g0/0.99
+ encapsulation dot1Q 99 native
+ ip address 172.16.99.3 255.255.255.0
+ exit
+
+!--------------------------------------------
+! Configuration DHCP
+!--------------------------------------------
+
+
+ip dhcp excluded-address 172.16.10.1 172.16.10.128
+ip dhcp excluded-address 172.16.20.1 172.16.20.128
+ip dhcp excluded-address 172.16.30.1 172.16.30.128
+
+ip dhcp pool POOL_V10
+ network 172.16.10.0 255.255.255.0
+ default-router 172.16.10.1
+ dns-server 8.8.8.8
+exit
+
+
+ip dhcp pool POOL_V20
+ network 172.16.20.0 255.255.255.0
+ default-router 172.16.20.1
+ dns-server 8.8.8.8
+exit
+
+ip dhcp pool POOL_V30
+ network 172.16.30.0 255.255.255.0
+ default-router 172.16.30.1
+ dns-server 8.8.8.8
+exit
+
+
+!--------------------------------------------
+! Correction des Exclusions DHCP
+!--------------------------------------------
+
+no ip dhcp excluded-address 172.16.10.1 172.16.10.128
+no ip dhcp excluded-address 172.16.20.1 172.16.20.128
+no ip dhcp excluded-address 172.16.30.1 172.16.30.128
+
+ip dhcp excluded-address 172.16.10.1 172.16.10.10
+ip dhcp excluded-address 172.16.20.1 172.16.20.10
+ip dhcp excluded-address 172.16.30.1 172.16.30.10
+
+ip dhcp excluded-address 172.16.30.11 172.16.30.12
+
+!--------------------------------------------
+! Corriger le conflit sur les Routeurs
+!--------------------------------------------
+
+
+ip dhcp excluded-address 172.16.30.11 172.16.30.12
+exit
+

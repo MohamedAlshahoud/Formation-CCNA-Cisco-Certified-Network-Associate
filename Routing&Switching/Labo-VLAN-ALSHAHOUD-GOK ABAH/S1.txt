@@ -1,0 +1,234 @@
+! S1
+!---------------------------------------------
+! configuration de base
+!---------------------------------------------
+
+enable
+conf t
+
+!---------------------------------------------
+! Désactiver la recherche DNS
+!---------------------------------------------
+
+no ip domain-lookup
+
+!---------------------------------------------
+! Nom
+!---------------------------------------------
+hostname S1
+
+!---------------------------------------------
+! Nom de domaine
+!---------------------------------------------
+
+ip domain-name vlan.com
+
+!---------------------------------------------
+! Mot de passe chiffré du mode d'exécution privilégié
+!---------------------------------------------
+enable secret class
+
+!---------------------------------------------
+! Mot de passe d'accès à la console
+!---------------------------------------------
+line console 0
+password cisco
+login
+exit
+
+!---------------------------------------------
+! Créer un utilisateur administrateur dans la base de données locale
+!---------------------------------------------
+username admin privilege 15 secret admin123
+
+!---------------------------------------------
+! Chiffrer tous les mots de passe en clair
+!---------------------------------------------
+service password-encryption
+
+!---------------------------------------------
+! Définir le login sur les lignes VTY pour utiliser la base de données locale
+!---------------------------------------------
+line vty 0 15
+login local
+
+!---------------------------------------------
+! Régler les lignes VTY pour n'accepter que les connexions SSH
+!---------------------------------------------
+transport input ssh
+exit
+
+!---------------------------------------------
+! Configurer une bannière MOTD
+!---------------------------------------------
+banner motd "ACCES LIMITE. AUTORISATION REQUISE."
+end
+copy running-config startup-config
+
+
+
+!---------------------------------------------
+! configuration des VLANs
+!---------------------------------------------
+enable
+conf t
+vlan 10
+name R&D
+exit
+
+vlan 20
+name STAFF
+exit
+
+vlan 30
+name MGNT
+exit
+
+vlan 90
+name TRASH
+exit
+
+vlan 99
+name NATIF
+exit
+end
+copy running-config startup-config
+
+
+
+!---------------------------------------------
+! configuration du Trank 802.1Q
+!---------------------------------------------
+conf t
+
+!---------------------------------------------
+! Trunck vers S2
+!---------------------------------------------
+interface FastEthernet0/1
+switchport mode trunk
+switchport trunk native vlan 99
+exit
+
+
+
+!---------------------------------------------
+! Attribution des Ports d'Accès aux VLANs
+!---------------------------------------------
+conf t
+interface FastEthernet0/6
+switchport mode access
+switchport access vlan 10
+exit
+end
+copy running-config startup-config
+
+
+
+
+
+!---------------------------------------------
+! VLAN TRASH et Désactivation
+!---------------------------------------------
+conf t
+
+!---------------------------------------------
+! Range 1: f0/2 à f0/4
+!---------------------------------------------
+
+interface range FastEthernet0/2 - 4
+switchport mode access
+switchport access vlan 90
+shutdown
+exit
+
+!---------------------------------------------
+! Range 2: f0/7 à f0/24 (Tous les ports restants sur S1)
+!---------------------------------------------
+interface range FastEthernet0/7 - 24
+switchport mode access
+switchport access vlan 90
+shutdown
+exit
+
+end
+copy running-config startup-config
+
+
+
+
+!---------------------------------------------
+! Configuration de Management (VLAN MGMT)
+!---------------------------------------------
+
+interface vlan 30
+
+ip address 172.16.30.1 255.255.255.0
+no shutdown
+exit
+
+ip default-gateway 172.16.30.254
+end
+copy running-config startup-config
+
+
+
+
+
+!---------------------------------------------
+! Sécurité d'Accès au Management (ACL)
+!---------------------------------------------
+conf t
+!---------------------------------------------
+! Créez une ACL Numérotée (Exemple 10) pour autoriser seulement l'hôte PC3
+!---------------------------------------------
+access-list 10 permit 172.16.30.13 0.0.0.0
+
+!---------------------------------------------------
+! Appliquez l'ACL aux lignes VTY (pour les connexions entrantes SSH)
+!-------------------------------------------------------------------
+line vty 0 15
+access-class 10 in
+exit
+
+end
+copy running-config startup-config
+
+
+
+
+
+
+
+!---------------------------------------------------
+! Correction de l'Adresse IP de Management (VLAN 30)
+!-------------------------------------------------------------------
+conf t
+interface vlan 30
+ip address 172.16.30.1 255.255.255.0
+no shutdown
+exit
+
+exit
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+!---------------------------------------------------
+! Génération des Clés Cryptographiques RSA
+!-------------------------------------------------------------------
+conf t
+ip domain-name labo-vlan.com
+crypto key generate rsa
+1024
+end
+copy running-config startup-config

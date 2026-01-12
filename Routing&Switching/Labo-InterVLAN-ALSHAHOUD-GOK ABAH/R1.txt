@@ -1,0 +1,115 @@
+! R1
+!---------------------------------------------
+! configuration de base
+!---------------------------------------------
+
+enable
+conf t
+
+!---------------------------------------------
+! Désactiver la recherche DNS
+!---------------------------------------------
+
+no ip domain-lookup
+
+!---------------------------------------------
+! Nom
+!---------------------------------------------
+hostname R1
+
+!---------------------------------------------
+! Nom de domaine
+!---------------------------------------------
+ip domain-name labo-intervlan.com
+
+!---------------------------------------------
+! Mot de passe chiffré du mode d'exécution privilégié
+!---------------------------------------------
+enable secret class
+
+!---------------------------------------------
+! Mot de passe d'accès à la console
+!---------------------------------------------
+line console 0
+password cisco
+login
+exit
+
+!---------------------------------------------
+! Créer un utilisateur administrateur dans la base de données locale
+!---------------------------------------------
+username admin privilege 15 secret admin123
+
+!---------------------------------------------
+! Chiffrer tous les mots de passe en clair
+!---------------------------------------------
+service password-encryption
+
+!---------------------------------------------
+! Définir le login sur les lignes VTY pour utiliser la base de données locale
+!---------------------------------------------
+line vty 0 15
+login local
+
+!---------------------------------------------
+! Régler les lignes VTY pour n'accepter que les connexions SSH
+!---------------------------------------------
+transport input ssh
+exit
+
+!---------------------------------------------
+! Configurer une bannière MOTD
+!---------------------------------------------
+banner motd "ACCES LIMITE. AUTORISATION REQUISE."
+end
+copy running-config startup-config
+
+
+
+
+
+!---------------------------------------------
+! Mise à Jour du Routage Inter-VLAN sur R1
+!---------------------------------------------
+conf t
+!---------------------------------------------
+! Activez l'interface physique que vous avez choisie
+!---------------------------------------------
+interface GigabitEthernet0/0/1
+no shutdown
+exit
+
+!---------------------------------------------
+! Sous-interface pour VLAN 10 (R&D)
+!---------------------------------------------
+interface GigabitEthernet0/0/1.10
+encapsulation dot1Q 10
+ip address 172.16.10.254 255.255.255.0
+exit
+
+!---------------------------------------------
+! Sous-interface pour VLAN 20 (STAFF)
+!---------------------------------------------
+interface GigabitEthernet0/0/1.20
+encapsulation dot1Q 20
+ip address 172.16.20.254 255.255.255.0
+exit
+
+!---------------------------------------------
+! Sous-interface pour VLAN 30 (MGMT)
+!---------------------------------------------
+interface GigabitEthernet0/0/1.30
+encapsulation dot1Q 30
+ip address 172.16.30.254 255.255.255.0
+exit
+
+!---------------------------------------------
+! Sous-interface pour VLAN 99 (NATIF)
+!---------------------------------------------
+interface GigabitEthernet0/0/1.99
+encapsulation dot1Q 99 native
+ip address 172.16.99.254 255.255.255.0
+exit
+
+end
+copy running-config startup-config
