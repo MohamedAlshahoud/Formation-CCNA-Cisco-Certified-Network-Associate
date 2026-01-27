@@ -1,0 +1,159 @@
+!---------------------------------------------
+! Configuration de base
+!---------------------------------------------
+
+en
+conf t
+no ip domain-lookup
+hostname S2
+ip domain-name labo-securite.com
+enable secret class
+line console 0
+ password cisco
+ login
+exit
+username admin secret admin123
+line vty 0 15
+  login local
+  transport input ssh
+exit
+service password-encryption
+banner motd "Acces reserve aux administrateurs !"
+
+
+
+!---------------------------------------------
+! Configuration des VLANs et de l'EtherChannel
+!---------------------------------------------
+
+
+vlan 10
+ name R&D
+vlan 20
+ name STAFF
+vlan 30
+ name MGNT
+vlan 90
+ name TRASH
+vlan 99
+ name NATIF
+exit
+
+interface range f0/1 - 2
+ channel-group 1 mode desirable
+ switchport mode trunk
+ switchport trunk native vlan 99
+exit
+
+!---------------------------------------------
+! Affectation des ports et Sécurité
+!---------------------------------------------
+
+
+interface f0/18
+ switchport mode access
+ switchport access vlan 30
+exit
+
+interface f0/24
+ switchport mode access
+ switchport access vlan 20
+exit
+
+interface f0/5
+ switchport mode trunk
+ switchport trunk native vlan 99
+ no shutdown
+exit
+
+
+!---------------------------------------------
+! VLAN TRASH  (Ports inutilisés éteints)
+!---------------------------------------------
+
+
+interface range f0/3 - 4 , f0/7 - 17 , f0/19 - 23
+ switchport access vlan 90
+ shutdown
+exit
+
+!---------------------------------------------
+! Configuration du Management
+!---------------------------------------------
+
+
+interface vlan 30
+ ip address 172.16.30.12 255.255.255.0
+ no shutdown
+exit
+ip default-gateway 172.16.30.1
+
+!---------------------------------------------
+! Activer le SSH et la liaison physique
+!---------------------------------------------
+
+
+conf t
+ip domain-name labo-securite.com
+crypto key generate rsa
+
+!--------------------------------------------
+! Activation de la liaison physique
+! (Corrige les flèches rouges)
+!--------------------------------------------
+
+
+conf t
+interface f0/5
+no shutdown
+
+
+!---------------------------------------------
+! Sécurité des ports et Services
+!---------------------------------------------
+interface range f0/18, f0/24
+ switchport port-security
+ switchport port-security maximum 1
+ switchport port-security mac-address sticky
+ switchport port-security violation shutdown
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+exit
+
+ip dhcp snooping
+ip dhcp snooping vlan 10,20,30
+no ip dhcp snooping information option
+ip arp inspection vlan 10,20,30
+
+interface range f0/1 - 2, f0/5
+ ip dhcp snooping trust
+ ip arp inspection trust
+exit
+
+
+!=====================================================
+! MODIFICATIONS FINALES (Après Tests)
+!=====================================================
+
+!---------------------------------------------
+! 1. Correction du Trust sur les ports physiques
+! (Confirmé par votre test "show ip dhcp snooping")
+!---------------------------------------------
+
+interface range f0/1 - 2
+ ip dhcp snooping trust
+ ip arp inspection trust
+exit
+
+!---------------------------------------------
+! 2. Nettoyage du port f0/10 après test
+! (On remet le port dans le VLAN TRASH et on l'éteint)
+!---------------------------------------------
+
+interface f0/10
+ description PORT_TEST_TERMINE
+ switchport access vlan 90
+ shutdown
+exit
+
+do write

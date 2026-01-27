@@ -1,0 +1,104 @@
+!---------------------------------------------
+! Configuration de base
+!---------------------------------------------
+
+en
+conf t
+hostname R1
+no ip domain-lookup
+ip domain-name labo-Routage.com
+security password min-length 5
+enable secret class
+line console 0
+ password cisco
+ login
+exit
+username admin secret admin123
+crypto key generate rsa
+line vty 0 4
+ login local
+ transport input ssh
+exit
+
+
+!---------------------------------------------
+! Interface vers R3
+!---------------------------------------------
+
+interface g0/0/1
+ description LIEN_VERS_R3
+ ip address 10.10.13.1 255.255.255.252
+ no shutdown
+exit
+
+
+!---------------------------------------------
+! Configuration LAN (Router-on-a-Stick)
+!---------------------------------------------
+
+interface g0/0/0
+ no shutdown
+exit
+
+
+!---------------------------------------------
+! VLAN 10 - R&D (Actif sur R1)
+!---------------------------------------------
+
+interface g0/0/0.10
+ encapsulation dot1Q 10
+ ip address 172.16.10.2 255.255.255.0
+ ip helper-address 10.10.13.2
+
+!---------------------------------------------
+! HSRP
+!---------------------------------------------
+
+ standby 10 ip 172.16.10.1
+ standby 10 priority 110
+ standby 10 preempt
+exit
+
+
+!---------------------------------------------
+! VLAN 30 - MGNT (Actif sur R1)
+!---------------------------------------------
+
+interface g0/0/0.30
+ encapsulation dot1Q 30
+ ip address 172.16.30.2 255.255.255.0
+ ip helper-address 10.10.13.2
+
+!---------------------------------------------
+! HSRP
+!---------------------------------------------
+ 
+ standby 30 ip 172.16.30.1
+ standby 30 priority 110
+ standby 30 preempt
+exit
+
+
+!---------------------------------------------
+! VLAN 20 - STAFF (Passif/Standby sur R1)
+!---------------------------------------------
+
+interface g0/0/0.20
+ encapsulation dot1Q 20
+ ip address 172.16.20.2 255.255.255.0
+ ip helper-address 10.10.13.2
+
+!---------------------------------------------
+! HSRP (Priorité par défaut 100)
+!---------------------------------------------
+
+ standby 20 ip 172.16.20.1
+exit
+
+!---------------------------------------------
+! Routage Statique
+!---------------------------------------------
+
+ip route 0.0.0.0 0.0.0.0 10.10.13.2
+
+end

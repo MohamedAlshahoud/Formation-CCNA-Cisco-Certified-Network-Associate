@@ -1,0 +1,113 @@
+!---------------------------------------------
+! Configuration de base
+!---------------------------------------------
+
+en
+conf t
+no ip domain-lookup
+hostname S1
+ip domain-name labo-Routage.com
+security password min-length 5
+enable secret class
+line console 0
+ password cisco
+ login
+exit
+username admin secret admin123
+crypto key generate rsa
+line vty 0 15
+ login local
+ transport input ssh
+exit
+service password-encryption
+banner motd "Acces reserve aux administrateurs - S1"
+
+!---------------------------------------------
+! Création des VLANs
+!---------------------------------------------
+
+vlan 10
+ name R&D
+vlan 20
+ name STAFF
+vlan 30
+ name MGNT
+vlan 90
+ name TRASH
+vlan 99
+ name NATIF
+exit
+
+!---------------------------------------------
+! EtherChannel et Trust DHCP
+!---------------------------------------------
+
+interface range f0/1 - 2
+ channel-group 1 mode desirable
+ switchport mode trunk
+ switchport trunk native vlan 99
+ ip dhcp snooping trust
+ ip arp inspection trust
+exit
+
+interface Port-channel 1
+ switchport mode trunk
+ switchport trunk native vlan 99
+ ip dhcp snooping trust
+ ip arp inspection trust
+exit
+
+!---------------------------------------------
+! Liaison vers Routeurs (f0/5)
+!---------------------------------------------
+
+interface f0/5
+ description LINK_TO_ROUTERS
+ switchport mode trunk 
+ switchport trunk native vlan 99 
+ ip dhcp snooping trust
+ ip arp inspection trust
+ no shutdown
+exit
+
+!---------------------------------------------
+! Accès PC1 (VLAN 10)
+!---------------------------------------------
+
+interface f0/6
+ description PC1-RD
+ switchport mode access
+ switchport access vlan 10 
+ spanning-tree portfast 
+ no shutdown
+exit
+
+!---------------------------------------------
+! Mise au rebut des ports inutilisés
+!---------------------------------------------
+
+interface range f0/3 - 4, f0/7 - 24, g0/1 - 2
+ switchport mode access
+ switchport access vlan 90
+ shutdown
+exit
+
+!---------------------------------------------
+! IP de Management
+!---------------------------------------------
+
+interface vlan 30
+ ip address 172.16.30.11 255.255.255.0
+ no shutdown
+exit
+ip default-gateway 172.16.30.1
+
+!---------------------------------------------
+! Activation DHCP Snooping global
+!---------------------------------------------
+
+ip dhcp snooping
+ip dhcp snooping vlan 10,20,30
+no ip dhcp snooping information option
+ip arp inspection vlan 10,20,30
+

@@ -1,0 +1,94 @@
+!---------------------------------------------
+! Configuration de base
+!---------------------------------------------
+en
+conf t
+hostname R3
+no ip domain-lookup
+ip domain-name labo-Routage.com
+security password min-length 5
+enable secret class
+line console 0
+ password cisco
+ login
+exit
+username admin secret admin123
+crypto key generate rsa
+line vty 0 4
+ login local
+ transport input ssh
+exit
+
+!---------------------------------------------
+! Interface vers R1
+!---------------------------------------------
+interface f0/0
+ description LIEN_VERS_R1
+ ip address 10.10.13.2 255.255.255.252
+ no shutdown
+exit
+
+!---------------------------------------------
+! Interface vers R2
+!---------------------------------------------
+interface f0/1
+ description LIEN_VERS_R2
+ ip address 10.10.23.2 255.255.255.252
+ no shutdown
+exit
+
+!---------------------------------------------
+! Simulation Internet
+!---------------------------------------------
+interface Loopback0
+ ip address 209.165.200.225 255.255.255.224
+exit
+
+!---------------------------------------------
+! Configuration DHCP (Centralisé sur R3)
+!---------------------------------------------
+ip dhcp excluded-address 172.16.10.1 172.16.10.10
+ip dhcp excluded-address 172.16.20.1 172.16.20.10
+ip dhcp excluded-address 172.16.30.1 172.16.30.12
+
+ip dhcp pool POOL_V10
+ network 172.16.10.0 255.255.255.0
+ default-router 172.16.10.1
+exit
+ip dhcp pool POOL_V20
+ network 172.16.20.0 255.255.255.0
+ default-router 172.16.20.1
+exit
+ip dhcp pool POOL_V30
+ network 172.16.30.0 255.255.255.0
+ default-router 172.16.30.1
+exit
+
+!---------------------------------------------
+! Routes de retour (CORRIGÉES)
+!---------------------------------------------
+
+
+!---------------------------------------------
+! Retour vers VLAN 10 via R1
+!---------------------------------------------
+
+ip route 172.16.10.0 255.255.255.0 10.10.13.1
+
+
+!---------------------------------------------
+! Retour vers VLAN 20 via R2 (Correction de l'IP : .3 au lieu de .1)
+!---------------------------------------------
+
+ip route 172.16.20.0 255.255.255.0 10.10.23.1
+
+
+!---------------------------------------------
+! Retour vers VLAN 30 via R1 (S'assurer que R1 connaît le VLAN 30)
+!---------------------------------------------
+
+ip route 172.16.30.0 255.255.255.0 10.10.13.1
+
+end
+
+

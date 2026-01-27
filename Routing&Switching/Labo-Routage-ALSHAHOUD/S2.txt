@@ -1,0 +1,118 @@
+!---------------------------------------------
+! Configuration de base
+!---------------------------------------------
+en
+conf t
+no ip domain-lookup
+hostname S2
+ip domain-name labo-Routage.com
+security password min-length 5
+
+enable secret class
+username admin secret admin123
+service password-encryption
+line console 0
+ password cisco 
+ login
+exit
+
+line vty 0 15
+ login local
+ transport input ssh
+exit
+
+crypto key generate rsa
+
+banner motd "Acces reserve aux administrateurs - S2"
+
+!---------------------------------------------
+! Création des VLANs
+!---------------------------------------------
+vlan 10
+ name R&D 
+vlan 20
+ name STAFF 
+vlan 30
+ name MGNT 
+vlan 90
+ name TRASH
+vlan 99
+ name NATIF
+exit
+
+!---------------------------------------------
+! EtherChannel (Lien vers S1)
+!---------------------------------------------
+interface range f0/1 - 2
+ channel-group 1 mode desirable
+ switchport mode trunk
+ switchport trunk native vlan 99
+exit
+
+interface Port-channel 1
+ switchport mode trunk
+ switchport trunk native vlan 99
+ ip dhcp snooping trust 
+ ip arp inspection trust
+exit
+
+!---------------------------------------------
+! Accès PC3 (VLAN 30) et PC2 (VLAN 20)
+!---------------------------------------------
+interface f0/18
+ description PC3-MGNT
+ switchport mode access
+ switchport access vlan 30
+ spanning-tree portfast
+ no shutdown
+exit
+
+interface f0/24
+ description PC2-STAFF
+ switchport mode access
+ switchport access vlan 20
+ spanning-tree portfast
+ no shutdown
+exit
+
+!---------------------------------------------
+! Liaison vers R2 (f0/5)
+!---------------------------------------------
+interface f0/5
+ description LINK_TO_R2
+ switchport mode trunk
+ switchport trunk native vlan 99
+ ip dhcp snooping trust
+ ip arp inspection trust
+ no shutdown
+exit
+
+!---------------------------------------------
+! Ports inutilisés (Ajout des interfaces Gigabit)
+!---------------------------------------------
+interface range f0/3 - 4, f0/6 - 17, f0/19 - 23, g0/1 - 2
+ switchport mode access
+ switchport access vlan 90 
+ shutdown 
+exit
+
+!---------------------------------------------
+! Management
+!---------------------------------------------
+interface vlan 30
+ description IP_GESTION_S2
+ ip address 172.16.30.12 255.255.255.0
+ no shutdown
+exit
+ip default-gateway 172.16.30.1
+
+!---------------------------------------------
+! Sécurité : DHCP Snooping et ARP Inspection
+!---------------------------------------------
+ip dhcp snooping 
+ip dhcp snooping vlan 10,20,30 
+no ip dhcp snooping information option
+ip arp inspection vlan 10,20,30
+exit
+
+end
