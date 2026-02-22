@@ -50,6 +50,6 @@ Ce **programme** à but non lucratif :
 | 🟣 **CCNP** |**Cisco Certified Network Professional** | **Spécialisation avancée en routage, commutation, sécurité, etc.** |
 | 🔴 **CCIE** |**Cisco Certified Internetwork Expert** | **Expertise sur les architectures complexes** |
 
-Les examens sont organisés par Cisco.
+Les examens sont organisés par **Cisco**.
 
 ---
