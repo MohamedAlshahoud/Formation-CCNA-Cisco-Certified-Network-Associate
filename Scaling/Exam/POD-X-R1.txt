@@ -1,0 +1,119 @@
+!---------------------------------------------
+! Configuration de base et Securité
+!---------------------------------------------
+enable
+configure terminal
+hostname POD-X-R1
+no ip domain-lookup
+ip domain-name labo-NAT.com
+enable secret class
+security password min-length 5
+service password-encryption
+
+username admin secret admin123
+banner motd "Acces reserve aux administrateurs - POD-X-R1 - Exam Session 1"
+
+!---------------------------------------------
+! Configuration DHCP (Nouveaux réseaux 192.168)
+!---------------------------------------------
+ip dhcp excluded-address 192.168.10.1 192.168.10.10
+ip dhcp excluded-address 192.168.20.1 192.168.20.10
+ip dhcp excluded-address 192.168.30.1 192.168.30.10
+ip dhcp excluded-address 192.168.40.1 192.168.40.10
+
+ip dhcp pool POOL-RD
+ network 192.168.10.0 255.255.255.0
+ default-router 192.168.10.1
+ dns-server 8.8.8.8
+exit
+
+ip dhcp pool POOL-STAFF
+ network 192.168.20.0 255.255.255.0
+ default-router 192.168.20.1
+ dns-server 8.8.8.8
+exit
+
+ip dhcp pool POOL-MGNT
+ network 192.168.30.0 255.255.255.0
+ default-router 192.168.30.1
+exit
+
+!---------------------------------------------
+! Interfaces LAN (Vers R1 et R2)
+!---------------------------------------------
+interface f0/0
+ description LINK_TO_R1
+ ip address 172.16.13.2 255.255.255.252
+ ip nat inside
+ no shutdown
+exit
+
+interface f0/1
+ description LINK_TO_R2
+ ip address 172.16.23.2 255.255.255.252
+ ip nat inside
+ no shutdown
+exit
+
+!---------------------------------------------
+! Interface WAN (Vers ISP POD-X-R2)
+!---------------------------------------------
+interface f1/0
+ description LINK_TO_ISP
+ ! Premiere adresse du pool 209.165.201.0/27
+ ip address 209.165.201.1 255.255.255.224
+ ip nat outside
+ no shutdown
+exit
+
+!---------------------------------------------
+! Interface Loopback L1 (Acces reserve RD)
+!---------------------------------------------
+interface Loopback1
+ description SERVEUR_INTERNE_RD
+ ip address 10.10.10.1 255.255.255.255
+exit
+
+!---------------------------------------------
+! Routage OSPF et Statique
+!---------------------------------------------
+router ospf 1
+ router-id 3.3.3.3
+ network 172.16.13.0 0.0.0.3 area 0
+ network 172.16.23.0 0.0.0.3 area 0
+ network 10.10.10.1 0.0.0.0 area 0
+ default-information originate
+exit
+
+ip route 0.0.0.0 0.0.0.0 209.165.201.2
+
+!---------------------------------------------
+! Configuration NAT (Nouvel adressage Public)
+!---------------------------------------------
+
+! NAT Statique pour PC2 (Serveur STAFF)
+! On utilise la 3eme IP du pool : 209.165.201.3
+ip nat inside source static 192.168.20.10 209.165.201.3
+
+! PAT pour tous les autres (Surcharge interface WAN)
+access-list 1 permit 192.168.0.0 0.0.255.255
+ip nat inside source list 1 interface f1/0 overload
+
+!---------------------------------------------
+! Securite : Isolation Inter-VLAN
+!---------------------------------------------
+ip access-list extended ACL-ISOLATION
+ deny ip 192.168.0.0 0.0.255.255 192.168.0.0 0.0.255.255
+ permit ip any any
+exit
+
+! Application de l'isolation sur les interfaces LAN
+interface f0/0
+ ip access-group ACL-ISOLATION in
+exit
+interface f0/1
+ ip access-group ACL-ISOLATION in
+exit
+
+end
+write

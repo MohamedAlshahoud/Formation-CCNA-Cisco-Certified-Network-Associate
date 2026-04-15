@@ -1,0 +1,100 @@
+!---------------------------------------------
+! Configuration de base et Securite
+!---------------------------------------------
+enable
+configure terminal
+hostname S1
+no ip domain-lookup
+ip domain-name labo-ospf.com
+enable secret class
+security password min-length 5 
+service password-encryption
+username admin secret admin123
+banner motd "Acces reserve aux administrateurs - S1"
+
+!---------------------------------------------
+! Configuration des Lignes (Console et SSH)
+!---------------------------------------------
+line console 0
+ password cisco
+ login
+exit
+crypto key generate rsa
+line vty 0 15
+ login local
+ transport input ssh
+exit
+
+!---------------------------------------------
+! Creation des VLANs
+!---------------------------------------------
+vlan 10
+ name RD
+vlan 20
+ name STAFF
+vlan 30
+ name MGNT
+vlan 90
+ name TRASH
+vlan 99
+ name NATIF
+exit
+
+!---------------------------------------------
+! EtherChannel (Liaison vers S2)
+!---------------------------------------------
+interface range f0/1 - 2
+ channel-group 1 mode active
+ switchport mode trunk
+ switchport trunk native vlan 99
+exit
+
+interface Port-channel 1
+ switchport mode trunk
+ switchport trunk native vlan 99
+exit
+
+!---------------------------------------------
+! Liaison vers Routeur R1 (f0/5)
+!---------------------------------------------
+interface f0/5
+ description LINK_TO_R1
+ switchport mode trunk
+ switchport trunk native vlan 99
+ no shutdown
+exit
+
+!---------------------------------------------
+! Accès PC1 (VLAN 10)
+!---------------------------------------------
+interface f0/6
+ description PC1-RD
+ switchport mode access
+ switchport access vlan 10
+ spanning-tree portfast
+ no shutdown
+exit
+
+!---------------------------------------------
+! Mise au rebut des ports inutilises
+!---------------------------------------------
+interface range f0/3 - 4, f0/7 - 24, g0/1 - 2
+ switchport mode access
+ switchport access vlan 90
+ shutdown
+exit
+
+!---------------------------------------------
+! IP de Management (Optionnel)
+!---------------------------------------------
+
+interface vlan 30
+ description IP_MANAGEMENT_S1
+ ip address 172.16.30.11 255.255.255.0
+ no shutdown
+exit
+
+ip default-gateway 172.16.30.1
+
+end
+
