@@ -1,0 +1,167 @@
+!--------------------------------------------
+! Configuration de base & Sécurité
+!--------------------------------------------
+en
+conf t
+hostname RB
+no ip domain-lookup
+ip domain-name labo-vpn.com
+service password-encryption
+enable secret class
+username admin secret admin123
+crypto key generate rsa
+no cdp run
+no lldp run
+
+banner motd #
+Authorized access only. Violators will be prosecuted to the full extent of the law. #
+
+
+!--------------------------------------------
+! Accès Console et VTY
+!--------------------------------------------
+
+line console 0
+ exec-timeout 0
+ logging synchronous
+ password cisco
+ login
+exit
+
+line vty 0 4
+ exec-timeout 0
+ login local
+ transport input ssh
+exit
+
+
+!--------------------------------------------
+! Interfaces Physiques
+!--------------------------------------------
+interface FastEthernet 0/0
+ description WAN - Link to Internet
+ ip address 198.51.100.2 255.255.255.252
+ crypto map MYMAP
+ no shutdown
+exit
+
+interface FastEthernet 0/1
+ description LAN - Link to Syslog/Server
+ ip address 192.168.1.1 255.255.255.0
+ no shutdown
+exit
+
+
+!--------------------------------------------
+! Tunnels GRE
+!--------------------------------------------
+
+interface Tunnel1
+ description Tunnel to R-Etud-1
+ ip address 172.16.1.2 255.255.255.0
+ ip mtu 1400
+ ip tcp adjust-mss 1360
+ tunnel source FastEthernet 0/0
+ tunnel destination 203.0.113.2
+exit
+
+interface Tunnel2
+ description Tunnel to R-Etud-2
+ ip address 172.16.2.2 255.255.255.0
+ ip mtu 1400
+ ip tcp adjust-mss 1360
+ tunnel source FastEthernet 0/0
+ tunnel destination 203.0.113.6
+exit
+
+interface Tunnel3
+ description Tunnel to R-Etud-3
+ ip address 172.16.3.2 255.255.255.0
+ ip mtu 1400
+ ip tcp adjust-mss 1360
+ tunnel source FastEthernet 0/0
+ tunnel destination 203.0.113.10
+exit
+
+
+!--------------------------------------------
+! Routage OSPF
+!--------------------------------------------
+router ospf 1
+ router-id 4.4.4.4
+ auto-cost reference-bandwidth 10000
+ network 192.168.1.0 0.0.0.255 area 0
+ network 172.16.1.0 0.0.0.255 area 0
+ network 172.16.2.0 0.0.0.255 area 0
+ network 172.16.3.0 0.0.0.255 area 0
+ passive-interface FastEthernet 0/0
+exit
+
+
+!--------------------------------------------
+! Route Statique par défaut
+!--------------------------------------------
+
+ip route 0.0.0.0 0.0.0.0 198.51.100.1
+
+exit
+
+!--------------------------------------------
+! ISAKMP
+!--------------------------------------------
+
+crypto isakmp policy 10
+ encr aes 256
+ authentication pre-share
+ group 5
+ lifetime 3600
+exit
+
+
+!--------------------------------------------
+! Clés pour chaque Spoke
+!--------------------------------------------
+
+crypto isakmp key PASS address 203.0.113.2
+crypto isakmp key PASS address 203.0.113.6
+crypto isakmp key PASS address 203.0.113.10
+
+
+!--------------------------------------------
+! IPsec
+!--------------------------------------------
+
+crypto ipsec transform-set TRANS esp-aes 256 esp-sha-hmac 
+ mode transport
+exit
+
+
+!--------------------------------------------
+! ACLs pour protéger le flux GRE (indispensables pour la Crypto Map) 
+!--------------------------------------------
+
+access-list 110 permit gre host 198.51.100.2 host 203.0.113.2
+access-list 120 permit gre host 198.51.100.2 host 203.0.113.6
+access-list 130 permit gre host 198.51.100.2 host 203.0.113.10
+
+
+!--------------------------------------------
+! Crypto Map (Regroupement des 3 Spokes)
+!--------------------------------------------
+
+crypto map MYMAP 10 ipsec-isakmp 
+ set peer 203.0.113.2
+ set transform-set TRANS 
+ match address 110
+exit
+crypto map MYMAP 20 ipsec-isakmp 
+ set peer 203.0.113.6
+ set transform-set TRANS 
+ match address 120
+exit
+crypto map MYMAP 30 ipsec-isakmp 
+ set peer 203.0.113.10
+ set transform-set TRANS 
+ match address 130
+
+exit

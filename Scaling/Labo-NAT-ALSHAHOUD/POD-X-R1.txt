@@ -1,0 +1,189 @@
+!---------------------------------------------
+! Configuration de base et Securite
+!---------------------------------------------
+enable
+configure terminal
+hostname POD-X-R1
+no ip domain-lookup
+ip domain-name labo-NAT.com
+enable secret class
+security password min-length 5
+service password-encryption
+
+username admin secret admin123
+banner motd "Acces reserve aux administrateurs - POD-X-R1"
+
+!---------------------------------------------
+! ACL de restriction Management
+!---------------------------------------------
+ip access-list standard ACL-ADMIN-ONLY
+ permit 172.16.30.0 0.0.0.255
+exit
+
+!---------------------------------------------
+! ACL pour l'étanchéité Inter-VLAN
+! Bloque le trafic entre 172.16.x.x mais autorise Internet
+!---------------------------------------------
+ip access-list extended ACL-ISOLATION-VLAN
+ deny ip 172.16.0.0 0.0.255.255 172.16.0.0 0.0.255.255
+ permit ip any any
+exit
+
+!---------------------------------------------
+! ACL pour restriction Loopback L1
+!---------------------------------------------
+ip access-list standard ACL-ONLY-RD
+ permit 172.16.10.0 0.0.0.255
+exit
+
+!---------------------------------------------
+! Configuration des Lignes (Console et SSH)
+!---------------------------------------------
+line console 0
+ password cisco
+ login
+exit
+
+crypto key generate rsa
+
+line vty 0 15
+ login local
+ transport input ssh
+ access-class ACL-ADMIN-ONLY in
+exit
+
+!---------------------------------------------
+! Serveur DHCP - Configuration des Pools
+!---------------------------------------------
+ip dhcp excluded-address 172.16.10.1 172.16.10.10
+ip dhcp excluded-address 172.16.20.1 172.16.20.10
+ip dhcp excluded-address 172.16.30.1 172.16.30.10
+
+ip dhcp pool POOL_VLAN10
+ network 172.16.10.0 255.255.255.0
+ default-router 172.16.10.1
+ dns-server 8.8.8.8
+
+ip dhcp pool POOL_VLAN20
+ network 172.16.20.0 255.255.255.0
+ default-router 172.16.20.1
+ dns-server 8.8.8.8
+
+ip dhcp pool POOL_VLAN30
+ network 172.16.30.0 255.255.255.0
+ default-router 172.16.30.1
+ dns-server 8.8.8.8
+
+!---------------------------------------------
+! Interfaces LAN (Application ACL)
+!---------------------------------------------
+interface FastEthernet0/0
+ description VERS_R1_G0/0/1
+ ip address 10.10.13.2 255.255.255.252
+ ip nat inside
+ ip access-group ACL-ISOLATION-VLAN in
+ no shutdown
+exit
+
+interface FastEthernet0/1
+ description VERS_R2_G0/0/1
+ ip address 10.10.23.2 255.255.255.252
+ ip access-group ACL-ISOLATION-VLAN in
+ no shutdown
+exit
+
+
+
+!---------------------------------------------
+! Interface WAN (Vers ISP)
+!---------------------------------------------
+interface FastEthernet1/0
+ description VERS_ISP_POD-X-R2
+ ip address 209.165.200.225 255.255.255.224
+ ip nat outside
+ no shutdown
+exit
+
+!---------------------------------------------
+! Loopback L1 - Réseau R&D
+!---------------------------------------------
+interface Loopback1
+ description RESEAU_RD_EXCLUSIF
+ ip address 10.10.10.1 255.255.255.0
+ ip access-group ACL-ONLY-RD out
+exit
+
+!---------------------------------------------
+! Routage OSPF et Statique
+!---------------------------------------------
+router ospf 1
+ router-id 3.3.3.3
+ network 10.10.10.0 0.0.0.255 area 0
+ network 10.10.13.0 0.0.0.3 area 0
+ network 10.10.23.0 0.0.0.3 area 0
+ default-information originate
+exit
+
+ip route 0.0.0.0 0.0.0.0 209.165.200.226
+
+!---------------------------------------------
+! Configuration NAT
+!---------------------------------------------
+! NAT Statique pour PC2 (Serveur STAFF)
+!---------------------------------------------
+
+ip nat inside source static 172.16.20.10 209.165.200.227
+
+!---------------------------------------------
+! PAT pour l'accès Internet
+!---------------------------------------------
+
+access-list 1 permit 172.16.0.0 0.0.255.255
+ip nat inside source list 1 interface FastEthernet1/0 overload
+
+interface FastEthernet0/0
+ ip nat inside
+exit
+
+interface FastEthernet0/1
+ ip nat inside
+exit
+
+
+interface FastEthernet1/0
+ ip nat outside
+exit
+
+
+
+!---------------------------------------------
+!On crée une ACL étendue pour être plus précis
+!---------------------------------------------
+
+ip access-list extended ACL-RESTRICT-RD
+ permit ip 172.16.10.0 0.0.0.255 host 10.10.10.1
+ deny ip any host 10.10.10.1
+ permit ip any any
+exit
+
+!---------------------------------------------
+!On applique cette ACL sur les interfaces d'entrée (LAN)
+!---------------------------------------------
+
+interface FastEthernet0/0
+ ip access-group ACL-RESTRICT-RD in
+exit
+
+interface FastEthernet0/1
+ ip access-group ACL-RESTRICT-RD in
+exit
+
+!---------------------------------------------
+!On retire l'ancienne ACL de la loopback pour ne pas surcharger
+!---------------------------------------------
+
+interface Loopback1
+ no ip access-group ACL-ONLY-RD out
+exit
+
+end

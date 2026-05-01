@@ -1,0 +1,126 @@
+!--------------------------------------------
+! Configuration de base & Sécurité
+!--------------------------------------------
+en
+conf t
+hostname R-Etud-3
+no ip domain-lookup
+ip domain-name labo-vpn.com
+service password-encryption
+enable secret class
+username admin secret admin123
+crypto key generate rsa
+no cdp run
+no lldp run
+
+banner motd #
+Authorized access only. Violators will be prosecuted to the full extent of the law. #
+
+
+!--------------------------------------------
+! Accès Console et VTY 
+!--------------------------------------------
+line console 0
+ exec-timeout 0
+ logging synchronous
+ password cisco
+ login
+exit
+
+line vty 0 4
+ exec-timeout 0
+ login local
+ transport input ssh
+exit
+
+
+!--------------------------------------------
+! Interfaces Physiques
+!--------------------------------------------
+interface FastEthernet 0/0
+ description WAN - Link to Internet
+ ip address 203.0.113.10 255.255.255.252
+ crypto map MYMAP
+ no shutdown
+exit
+
+interface FastEthernet 0/1
+ description LAN - Link to PC3
+ ip address 10.0.3.1 255.255.255.0
+ no shutdown
+exit
+
+
+!--------------------------------------------
+! Tunnel GRE
+!--------------------------------------------
+interface Tunnel3
+ description Tunnel to Hub RB-D
+ ip address 172.16.3.1 255.255.255.0
+ ip mtu 1400
+ ip tcp adjust-mss 1360
+ tunnel source FastEthernet 0/0
+ tunnel destination 198.51.100.2
+exit
+
+
+!--------------------------------------------
+! Routage OSPF
+!--------------------------------------------
+router ospf 1
+ router-id 3.3.3.3
+ auto-cost reference-bandwidth 10000
+ network 10.0.3.0 0.0.0.255 area 0
+ network 172.16.3.0 0.0.0.255 area 0
+ passive-interface FastEthernet 0/0
+exit
+
+
+!--------------------------------------------
+! Route Statique par défaut
+!--------------------------------------------
+ip route 0.0.0.0 0.0.0.0 203.0.113.9
+
+exit
+
+
+!--------------------------------------------
+! ISAKMP
+!--------------------------------------------
+crypto isakmp policy 10
+ encr aes 256
+ authentication pre-share
+ group 5
+ lifetime 3600
+exit
+crypto isakmp key PASS address 198.51.100.2
+
+
+
+!--------------------------------------------
+! IPsec
+!--------------------------------------------
+crypto ipsec transform-set TRANS esp-aes 256 esp-sha-hmac
+ mode transport
+exit
+
+
+
+!--------------------------------------------
+! ACL pour le trafic GRE 
+!--------------------------------------------
+access-list 100 permit gre host 203.0.113.10 host 198.51.100.2
+
+
+
+
+!--------------------------------------------
+! Crypto Map
+!--------------------------------------------
+crypto map MYMAP 10 ipsec-isakmp
+ set peer 198.51.100.2
+ set transform-set TRANS
+ match address 100
+exit
+
+
