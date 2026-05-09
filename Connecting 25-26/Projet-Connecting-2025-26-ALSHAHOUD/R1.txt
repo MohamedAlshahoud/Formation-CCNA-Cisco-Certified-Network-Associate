@@ -1,0 +1,36 @@
+!---------------------------------------------
+! Configuration de base et Securite
+!---------------------------------------------
+en
+conf t
+hostname R1
+no ip domain-lookup
+ip domain-name labo-connecting.com
+enable secret class
+security password min-length 5
+service password-encryption
+username admin secret admin123
+banner motd "Acces reserve aux administrateurs - R1"
+
+
+!---------------------------------------------
+! Configuration des Lignes (Console et SSH)
+!---------------------------------------------
+line console 0
+ password cisco
+ login
+exit
+
+!---------------------------------------------
+! Generation de la cle pour SSH
+!---------------------------------------------
+
+crypto key generate rsa
+
+
+line vty 0 15
+ login local
+ transport input ssh
+ access-class ACL-ADMIN-ONLY in 
+exit
+

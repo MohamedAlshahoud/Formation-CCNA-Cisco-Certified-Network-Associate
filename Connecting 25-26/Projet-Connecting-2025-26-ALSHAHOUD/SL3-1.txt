@@ -1,0 +1,60 @@
+!---------------------------------------------
+! Configuration de base et Securite
+!---------------------------------------------
+en
+conf t
+hostname SL3-1
+no ip domain-lookup
+ip domain-name labo-connecting.com
+enable secret class
+security password min-length 5
+service password-encryption
+username admin secret admin123
+banner motd "Acces reserve aux administrateurs - SL3-1"
+
+
+!---------------------------------------------
+! Configuration des Lignes (Console et SSH)
+!---------------------------------------------
+line console 0
+ password cisco
+ login
+exit
+
+!---------------------------------------------
+! Generation de la cle pour SSH
+!---------------------------------------------
+
+crypto key generate rsa
+
+
+line vty 0 15
+ login local
+ transport input ssh
+ access-class ACL-ADMIN-ONLY in 
+exit
+
+
+
+! --- VLANs ---
+vlan 10
+ name RD
+vlan 20
+ name STAFF
+vlan 99
+ name NATIF
+exit
+
+! --- Trunks ---
+interface range fastEthernet 1/0/1 - 4
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ switchport trunk native vlan 99
+
+! --- Routage Inter-VLAN  ---
+interface vlan 10
+ ip address 172.16.10.1 255.255.255.0
+ no shut
+interface vlan 20
+ ip address 172.16.20.1 255.255.255.0
+ no shut
