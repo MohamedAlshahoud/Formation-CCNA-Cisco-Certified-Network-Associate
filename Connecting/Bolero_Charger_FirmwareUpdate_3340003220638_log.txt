@@ -1,2 +1,0 @@
-2025-10-07 00:59:55 starting update from /media/usb/bolero_v3.4.1-15.package port A
-2025-10-07 01:00:38 update done successfully, reboot not required, will update BPs now
